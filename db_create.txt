@@ -1,13 +1,19 @@
 create database Library;
-create table User(id INT primary key not null auto_increment, name varchar(100) not null);
+create table User(id INT primary key not null auto_increment, name varchar(100) not null, age INT not null,
+    email varchar(100) not null, password varchar(100) not null, image varchar(100));
 create table Book(id INT primary key not null auto_increment, title varchar(100) not null, authorId INT not null,
     description varchar(255), quantity INT not null);
 create table Author(id INT primary key not null auto_increment, name varchar(100) not null);
 
 insert into Author (name) VALUES("Joan Rowling");
 insert into Author (name) VALUES("Герман Мелвилл");
+
 insert into Book (title, authorId, description, quantity) VALUES("Гарри Поттер", 1, "Мальчик, который выжил", 1);
 insert into Book (title, authorId, description, quantity) VALUES("Моби дик", 2, "Киты и религия", 2);
-
 //        bookList.add(new Book("Дракула", 1, "Наводит шороху в Лондоне", 1));
 //        bookList.add(new Book("Питтер Пен", 2, "Мальчик в колготках", 2));
+
+insert into User (name, age, email, password, image) VALUES("Марина", "43", "marina43@gmail.com", "qwerty", "");
+insert into User (name, age, email, password, image) VALUES("Антон777", "16", "tohatahser@gmail.com", "qazwsx", "");
+
+
