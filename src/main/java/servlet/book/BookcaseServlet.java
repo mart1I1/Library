@@ -1,4 +1,4 @@
-package servlet;
+package servlet.book;
 
 import exception.book.BookSelectException;
 import service.BookService;

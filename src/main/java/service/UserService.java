@@ -50,8 +50,8 @@ public class UserService {
     }
 
     public void updateUser(User user) throws UserUpdateException, InvalidDataException, UserSelectException, UserNotFoundException {
-        if (!Validator.validEmail(user.getEmail()) && !Validator.validStringValues(user.getName())
-                && !Validator.validPassword(user.getPassword()) && !Validator.validAge(user.getAge()))
+        if (!Validator.validEmail(user.getEmail()) || !Validator.validStringValues(user.getName())
+                || !Validator.validPassword(user.getPassword()) || !Validator.validAge(user.getAge()))
             throw new InvalidDataException();
         if (getUserById(user.getId()) == null)
             throw new UserNotFoundException();

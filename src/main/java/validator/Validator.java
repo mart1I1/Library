@@ -1,5 +1,10 @@
 package validator;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class Validator {
@@ -37,4 +42,11 @@ public class Validator {
     public static boolean validAge(int age) {
         return age > 0 && age < 150;
     }
+
+    //TODO: Доделать!
+    public static boolean validDate(String date) {
+        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+        return pattern.matcher(date).find();
+    }
+
 }

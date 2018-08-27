@@ -4,6 +4,7 @@ import dao.BookDAO;
 import entity.Book;
 import exception.InvalidDataException;
 import exception.author.AuthorNotFoundException;
+import exception.author.AuthorSelectException;
 import exception.book.*;
 import validator.Validator;
 
@@ -33,7 +34,7 @@ public class BookService {
     }
 
     public Book createBook(Book book)
-            throws BookAlreadyExistException, BookSelectException, BookCreateException, InvalidDataException, AuthorNotFoundException {
+            throws BookAlreadyExistException, BookSelectException, BookCreateException, InvalidDataException, AuthorNotFoundException, AuthorSelectException {
         if (!Validator.validQuantity(book.getQuantity()) ||
                 !Validator.validStringValues(book.getTitle(), book.getDescription()) ||
                 !Validator.validId(book.getAuthorId())) {

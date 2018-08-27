@@ -3,10 +3,10 @@ create table User(id INT primary key not null auto_increment, name varchar(100) 
     email varchar(100) not null, password varchar(100) not null, image varchar(100));
 create table Book(id INT primary key not null auto_increment, title varchar(100) not null, authorId INT not null,
     description varchar(255), quantity INT not null);
-create table Author(id INT primary key not null auto_increment, name varchar(100) not null);
+create table Author(id INT primary key not null auto_increment, name varchar(100) not null, birthday varchar(10) not null);
 
-insert into Author (name) VALUES("Joan Rowling");
-insert into Author (name) VALUES("Герман Мелвилл");
+insert into Author (name, birthday) VALUES("Joan Rowling", "1965-07-31");
+insert into Author (name, birthday) VALUES("Герман Мелвилл", "1819-08-01");
 
 insert into Book (title, authorId, description, quantity) VALUES("Гарри Поттер", 1, "Мальчик, который выжил", 1);
 insert into Book (title, authorId, description, quantity) VALUES("Моби дик", 2, "Киты и религия", 2);
