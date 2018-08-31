@@ -1,12 +1,8 @@
 package dao;
 
 import database.executor.Executor;
-import entity.Book;
 import entity.User;
-import exception.user.UserCreateException;
-import exception.user.UserDeleteException;
-import exception.user.UserSelectException;
-import exception.user.UserUpdateException;
+import exception.user.UserSQLExecException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +14,6 @@ import java.util.List;
 
 public class UserDAO {
 
-    private static final Logger logger = LogManager.getLogger(UserDAO.class.getName());
     private final static String GET_USER_BY_ID = "SELECT * FROM User where id = ?";
     private final static String GET_USER_BY_EMAIL = "SELECT * FROM User where email = ?";
 
@@ -35,27 +30,25 @@ public class UserDAO {
         this.executor = new Executor();
     }
 
-    public User getUserById(int id) throws UserSelectException {
+    public User getUserById(int id) throws UserSQLExecException {
         List<?> param = prepareParam(id);
         try {
             return execAndGetUser(GET_USER_BY_ID, param);
         } catch (SQLException e) {
-            logger.error("getUserById: " + e.getSQLState());
-            throw new UserSelectException();
+            throw new UserSQLExecException("get user by id");
         }
     }
 
-    public User getUserByEmail(String email) throws UserSelectException {
+    public User getUserByEmail(String email) throws UserSQLExecException {
         List<?> param = prepareParam(email);
         try {
             return execAndGetUser(GET_USER_BY_EMAIL, param);
         } catch (SQLException e) {
-            logger.error("getUserById: " + e.getSQLState());
-            throw new UserSelectException();
+            throw new UserSQLExecException("get user by email");
         }
     }
 
-    public User createUser(User user) throws UserCreateException {
+    public User createUser(User user) throws UserSQLExecException {
         List<?> param = prepareParam(
                 user.getName(),
                 user.getAge(),
@@ -66,21 +59,21 @@ public class UserDAO {
         try {
             executor.execUpdate(CREATE_USER, param);
             return getUserByEmail(user.getEmail());
-        } catch (SQLException | UserSelectException e) {
-            throw new UserCreateException();
+        } catch (SQLException e) {
+            throw new UserSQLExecException("create user");
         }
     }
 
-    public void deleteUserById(int id) throws UserDeleteException {
+    public void deleteUserById(int id) throws UserSQLExecException {
         List<?> param = prepareParam(id);
         try {
             executor.execUpdate(DELETE_USER_BY_ID, param);
         } catch (SQLException e) {
-            throw new UserDeleteException();
+            throw new UserSQLExecException("delete user by id");
         }
     }
 
-    public void updateUser(User user) throws UserUpdateException {
+    public void updateUser(User user) throws UserSQLExecException {
         List<?> param = prepareParam(
                 user.getName(),
                 user.getAge(),
@@ -92,7 +85,7 @@ public class UserDAO {
         try {
             executor.execUpdate(UPDATE_USER, param);
         } catch (SQLException e) {
-            throw new UserUpdateException();
+            throw new UserSQLExecException("update user");
         }
     }
 

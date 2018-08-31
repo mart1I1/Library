@@ -1,4 +1,4 @@
-package exception;
+package exception.validator;
 
 public class InvalidDataException extends Exception {
     public InvalidDataException() {

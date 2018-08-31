@@ -2,13 +2,12 @@ package service;
 
 import dao.AuthorDAO;
 import entity.Author;
-import exception.InvalidDataException;
+import exception.validator.InvalidDataException;
 import exception.author.AuthorAlreadyExistException;
 import exception.author.AuthorNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class AuthorServiceTest {

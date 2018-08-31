@@ -2,9 +2,9 @@ package servlet.book;
 
 import entity.Author;
 import entity.Book;
-import exception.InvalidDataException;
-import exception.author.AuthorSelectException;
-import exception.book.BookSelectException;
+import exception.validator.InvalidDataException;
+import exception.author.AuthorSQLExecException;
+import exception.book.BookSQLExecException;
 import service.AuthorService;
 import service.BookService;
 
@@ -26,14 +26,14 @@ public class BookServlet extends HttpServlet {
         Book book = null;
         try {
             book = bookService.getBookById(id);
-        } catch (BookSelectException | InvalidDataException e) {
+        } catch (InvalidDataException | BookSQLExecException e) {
             e.printStackTrace();
         }
         if (book != null) {
             Author author = null;
             try {
                 author = authorService.getAuthorById(book.getAuthorId());
-            } catch (InvalidDataException | AuthorSelectException e) {
+            } catch (InvalidDataException | AuthorSQLExecException e) {
                 e.printStackTrace();
             }
             req.setAttribute("book", book);

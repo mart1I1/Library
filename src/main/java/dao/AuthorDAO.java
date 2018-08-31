@@ -2,9 +2,7 @@ package dao;
 
 import database.executor.Executor;
 import entity.Author;
-import exception.author.AuthorCreateException;
-import exception.author.AuthorDeleteException;
-import exception.author.AuthorSelectException;
+import exception.author.AuthorSQLExecException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,12 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class AuthorDAO {
-
-    private static final Logger logger = LogManager.getLogger(AuthorDAO.class.getName());
 
     private final static String GET_AUTHOR_BY_ID = "SELECT * FROM Author where id = ?";
     private final static String GET_AUTHOR_BY_NAME_N_BIRTHDAY = "SELECT * FROM Author where name = ? and birthday = ?";
@@ -32,26 +27,25 @@ public class AuthorDAO {
         this.executor = new Executor();
     }
 
-    public Author getAuthorByID(int id) throws AuthorSelectException {
+    public Author getAuthorByID(int id) throws AuthorSQLExecException {
         List<?> param = prepareParam(id);
         try {
             return execAndGetAuthor(GET_AUTHOR_BY_ID, param);
         } catch (SQLException e) {
-            logger.error("getAuthorById: " + e.getSQLState());
-            throw new AuthorSelectException("get by id");
+            throw new AuthorSQLExecException("get by id");
         }
     }
 
-    public Author getAuthorByNameNBirthday(String name, String birthday) throws AuthorSelectException {
+    public Author getAuthorByNameNBirthday(String name, String birthday) throws AuthorSQLExecException {
         List<?> param = prepareParam(name, birthday);
         try {
             return execAndGetAuthor(GET_AUTHOR_BY_NAME_N_BIRTHDAY, param);
         } catch (SQLException e) {
-            throw new AuthorSelectException("get by name and birthday");
+            throw new AuthorSQLExecException("get by name and birthday");
         }
     }
 
-    public Author createAuthor(Author author) throws AuthorCreateException {
+    public Author createAuthor(Author author) throws AuthorSQLExecException {
         List<?> param = prepareParam(
                 author.getName(),
                 author.getBirthday()
@@ -59,17 +53,17 @@ public class AuthorDAO {
         try {
             executor.execUpdate(CREATE_AUTHOR, param);
             return getAuthorByNameNBirthday(author.getName(), author.getBirthday());
-        } catch (SQLException | AuthorSelectException e) {
-            throw new AuthorCreateException();
+        } catch (SQLException | AuthorSQLExecException e) {
+            throw new AuthorSQLExecException("create Author");
         }
     }
 
-    public void deleteAuthorById(int id) throws AuthorDeleteException {
+    public void deleteAuthorById(int id) throws AuthorSQLExecException {
         List<?> param = prepareParam(id);
         try {
             executor.execUpdate(DELETE_AUTHOR, param);
         } catch (SQLException e) {
-            throw new AuthorDeleteException();
+            throw new AuthorSQLExecException("delete Author");
         }
     }
 

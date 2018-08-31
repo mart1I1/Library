@@ -2,7 +2,7 @@ package service;
 
 import dao.UserDAO;
 import entity.User;
-import exception.InvalidDataException;
+import exception.validator.InvalidDataException;
 import exception.user.UserAlreadyExistException;
 import exception.user.UserNotFoundException;
 import org.junit.Before;

@@ -1,7 +1,6 @@
 package dao;
 
 import entity.User;
-import exception.user.UserSelectException;
 import org.junit.Before;
 import org.junit.Test;
 

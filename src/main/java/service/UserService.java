@@ -2,13 +2,16 @@ package service;
 
 import dao.UserDAO;
 import entity.User;
-import exception.InvalidDataException;
+import exception.validator.InvalidDataException;
 import exception.user.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.Message;
 import validator.Validator;
 
-import javax.xml.bind.ValidationEvent;
-
 public class UserService {
+
+    private final static Logger logger = LogManager.getLogger(UserService.class.getName());
 
     public UserService() {
         this.userDAO = new UserDAO();
@@ -20,42 +23,60 @@ public class UserService {
 
     private UserDAO userDAO;
 
-    public User getUserById(int id) throws UserSelectException, InvalidDataException {
-        if (!Validator.validId(id))
-            throw new InvalidDataException("bad id");
-        return userDAO.getUserById(id);
+    public User getUserById(int id) throws UserSQLExecException, InvalidDataException {
+        try {
+            Validator.validId(id);
+            return userDAO.getUserById(id);
+        } catch (InvalidDataException | UserSQLExecException e) {
+            logger.error(id, e);
+            throw e;
+        }
     }
 
-    public User getUserByEmail(String email) throws UserSelectException, InvalidDataException {
-        if (!Validator.validEmail(email))
-            throw new InvalidDataException("bad email");
-        return userDAO.getUserByEmail(email);
+    public User getUserByEmail(String email) throws InvalidDataException, UserSQLExecException {
+        try {
+            Validator.validEmail(email);
+            return userDAO.getUserByEmail(email);
+        } catch (InvalidDataException | UserSQLExecException e) {
+            logger.error(email, e);
+            throw e;
+        }
     }
 
-    public User createUser(User user) throws UserCreateException, InvalidDataException, UserSelectException, UserAlreadyExistException {
-        if (!Validator.validEmail(user.getEmail()) || !Validator.validStringValues(user.getName())
-            || !Validator.validPassword(user.getPassword()) || !Validator.validAge(user.getAge()))
-            throw new InvalidDataException();
-        if (getUserByEmail(user.getEmail()) != null)
-            throw new UserAlreadyExistException();
-        return userDAO.createUser(user);
+    public User createUser(User user) throws InvalidDataException, UserAlreadyExistException, UserSQLExecException {
+        try {
+            Validator.validUser(user);
+            if (getUserByEmail(user.getEmail()) != null)
+                throw new UserAlreadyExistException();
+            return userDAO.createUser(user);
+        } catch (InvalidDataException | UserAlreadyExistException | UserSQLExecException e) {
+            logger.error(user, e);
+            throw e;
+        }
     }
 
-    public void deleteUserById(int id) throws UserDeleteException, InvalidDataException, UserSelectException, UserNotFoundException {
-        if (!Validator.validId(id))
-            throw new InvalidDataException("bad id");
-        if (getUserById(id) == null)
-            throw new UserNotFoundException();
-        userDAO.deleteUserById(id);
+    public void deleteUserById(int id) throws InvalidDataException, UserNotFoundException, UserSQLExecException {
+        try {
+            Validator.validId(id);
+            if (getUserById(id) == null)
+                throw new UserNotFoundException();
+            userDAO.deleteUserById(id);
+        } catch (InvalidDataException | UserNotFoundException | UserSQLExecException e) {
+            logger.error(id, e);
+            throw e;
+        }
     }
 
-    public void updateUser(User user) throws UserUpdateException, InvalidDataException, UserSelectException, UserNotFoundException {
-        if (!Validator.validEmail(user.getEmail()) || !Validator.validStringValues(user.getName())
-                || !Validator.validPassword(user.getPassword()) || !Validator.validAge(user.getAge()))
-            throw new InvalidDataException();
-        if (getUserById(user.getId()) == null)
-            throw new UserNotFoundException();
-        userDAO.updateUser(user);
+    public void updateUser(User user) throws InvalidDataException, UserNotFoundException, UserSQLExecException {
+        try {
+            Validator.validUser(user);
+            if (getUserById(user.getId()) == null)
+                throw new UserNotFoundException();
+            userDAO.updateUser(user);
+        } catch (InvalidDataException | UserNotFoundException | UserSQLExecException e) {
+            logger.error(user, e);
+            throw e;
+        }
     }
 
 }

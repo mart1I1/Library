@@ -2,10 +2,7 @@ package dao;
 
 import database.executor.Executor;
 import entity.Book;
-import exception.book.BookCreateException;
-import exception.book.BookDeleteException;
-import exception.book.BookSelectException;
-import exception.book.BookUpdateException;
+import exception.book.BookSQLExecException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BookDAO {
-
-    private static final Logger logger = LogManager.getLogger(BookDAO.class.getName());
 
     private final static String GET_EXIST_BOOKS = "SELECT * FROM book where quantity > 0";
     private final static String GET_BOOK_BY_ID = "SELECT * FROM book where id = ?";
@@ -37,54 +32,52 @@ public class BookDAO {
         this.executor = new Executor();
     }
 
-    public List<Book> getExistBooks() throws BookSelectException {
+    public List<Book> getExistBooks() throws BookSQLExecException {
         List<?> param = prepareParam();
         try {
             return execAndGetListBooks(GET_EXIST_BOOKS, param);
         } catch (SQLException e) {
-            logger.error("getExistBooks: " + e.getSQLState());
-            throw new BookSelectException();
+            throw new BookSQLExecException("get exist books");
         }
     }
 
-    public List<Book> getBooks() throws BookSelectException {
+    public List<Book> getBooks() throws BookSQLExecException {
         List<?> param = prepareParam();
         try {
             return execAndGetListBooks(GET_BOOKS, param);
         } catch (SQLException e) {
-            logger.error("getBooks: " + e.getSQLState() );
-            throw new BookSelectException();
+            throw new BookSQLExecException("get books");
         }
     }
 
-    public Book getBookById(int id) throws BookSelectException {
+    public Book getBookById(int id) throws BookSQLExecException {
         List<?> param = prepareParam(id);
         try {
             return execAndGetBook(GET_BOOK_BY_ID, param);
         } catch (SQLException e) {
-            throw new BookSelectException();
+            throw new BookSQLExecException("get book by id");
         }
     }
 
-    public List<Book> getBooksByTitle(String title) throws BookSelectException {
+    public List<Book> getBooksByTitle(String title) throws BookSQLExecException {
         List<?> param = prepareParam(title);
         try {
             return execAndGetListBooks(GET_BOOKS_BY_TITLE, param);
         } catch (SQLException e) {
-            throw new BookSelectException();
+            throw new BookSQLExecException("get book by title");
         }
     }
 
-    public Book getBookByTitleAndAuthorId(String title, int authorId) throws BookSelectException {
+    public Book getBookByTitleAndAuthorId(String title, int authorId) throws BookSQLExecException {
         List<?> param = prepareParam(title, authorId);
         try {
             return execAndGetBook(GET_BOOK_BY_TITLE_N_AUTHORID, param);
         } catch (SQLException e) {
-            throw new BookSelectException();
+            throw new BookSQLExecException("get book by title and author id");
         }
     }
 
-    public Book createBook(Book book) throws BookCreateException {
+    public Book createBook(Book book) throws BookSQLExecException {
         List<?> param = prepareParam(
                 book.getTitle(),
                 book.getAuthorId(),
@@ -93,21 +86,21 @@ public class BookDAO {
         try {
             executor.execUpdate(CREATE_BOOK, param);
             return getBookByTitleAndAuthorId(book.getTitle(), book.getAuthorId());
-        } catch (SQLException | BookSelectException e) {
-            throw new BookCreateException();
+        } catch (SQLException e) {
+            throw new BookSQLExecException("create book");
         }
     }
 
-    public void deleteBookById(int id) throws BookDeleteException {
+    public void deleteBookById(int id) throws BookSQLExecException {
         List<?> param = prepareParam(id);
         try {
             executor.execUpdate(DELETE_BOOK_BY_ID, param);
         } catch (SQLException e) {
-            throw new BookDeleteException();
+            throw new BookSQLExecException("delete book by id");
         }
     }
 
-    public void updateBook(Book book) throws BookUpdateException {
+    public void updateBook(Book book) throws BookSQLExecException {
         List<?> param = prepareParam(
                 book.getTitle(),
                 book.getAuthorId(),
@@ -117,7 +110,7 @@ public class BookDAO {
         try {
             executor.execUpdate(UPDATE_BOOK, param);
         } catch (SQLException e) {
-            throw new BookUpdateException();
+            throw new BookSQLExecException("update book");
         }
     }
 

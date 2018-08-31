@@ -1,12 +1,8 @@
 package dao;
 
 import entity.Author;
-import exception.InvalidDataException;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 import static org.junit.Assert.*;
 

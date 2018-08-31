@@ -1,9 +1,6 @@
 package dao;
 
 import entity.Book;
-import exception.book.BookCreateException;
-import exception.book.BookDeleteException;
-import exception.book.BookSelectException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +33,7 @@ public class BookDAOTest {
     }
 
     @Test
-    public void getBooks() throws BookCreateException, BookSelectException, BookDeleteException {
+    public void getBooks() throws Exception {
         Book newBook = bookDAO.createBook(testBookZeroQuantity);
         assertEquals((Arrays.asList(testBook1, testBook2, newBook)), bookDAO.getBooks());
 
@@ -44,17 +41,17 @@ public class BookDAOTest {
     }
 
     @Test
-    public void getBookById() throws BookSelectException {
+    public void getBookById() throws Exception {
         assertEquals(testBook1, bookDAO.getBookById(testBook1.getId()));
     }
 
     @Test
-    public void getBookByIdNullResult() throws BookSelectException {
+    public void getBookByIdNullResult() throws Exception {
         assertNull(bookDAO.getBookById(testBook2.getId() + 10));
     }
 
     @Test
-    public void getBooksByTitle() throws BookSelectException, BookCreateException, BookDeleteException {
+    public void getBooksByTitle() throws Exception {
         Book newBookWithSameTitle = bookDAO.createBook(new Book(testBook1.getTitle(), 0, "q", 1));
         assertEquals(Arrays.asList(testBook1, newBookWithSameTitle), bookDAO.getBooksByTitle(testBook1.getTitle()));
 
@@ -62,17 +59,17 @@ public class BookDAOTest {
     }
 
     @Test
-    public void getBookByTitleAndAuthorId() throws BookSelectException {
+    public void getBookByTitleAndAuthorId() throws Exception {
         assertEquals(testBook1, bookDAO.getBookByTitleAndAuthorId(testBook1.getTitle(), testBook1.getAuthorId()));
     }
 
     @Test
-    public void getBookByTitleAndAuthorIdNull() throws BookSelectException {
+    public void getBookByTitleAndAuthorIdNull() throws Exception {
         assertNull(bookDAO.getBookByTitleAndAuthorId(testBook1.getTitle(), testBook1.getAuthorId() +1));
     }
 
     @Test
-    public void createBook() throws BookSelectException, BookCreateException, BookDeleteException {
+    public void createBook() throws Exception {
         assertNull(bookDAO.getBookByTitleAndAuthorId(testBookZeroQuantity.getTitle(), testBookZeroQuantity.getAuthorId()));
 
         Book newBook = bookDAO.createBook(testBookZeroQuantity);
@@ -82,7 +79,7 @@ public class BookDAOTest {
     }
 
     @Test
-    public void deleteBookById() throws BookCreateException, BookSelectException, BookDeleteException {
+    public void deleteBookById() throws Exception {
         Book newBook = bookDAO.createBook(testBookZeroQuantity);
         assertNotNull(bookDAO.getBookById(newBook.getId()));
         bookDAO.deleteBookById(newBook.getId());

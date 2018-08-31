@@ -3,7 +3,7 @@ package service;
 import dao.BookDAO;
 import entity.Author;
 import entity.Book;
-import exception.InvalidDataException;
+import exception.validator.InvalidDataException;
 import exception.author.AuthorNotFoundException;
 import exception.book.BookAlreadyExistException;
 import exception.book.BookNotFoundException;
